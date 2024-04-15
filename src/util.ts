@@ -12,12 +12,12 @@ export const parseHeader = (dataView: DataView) => {
   };
 }
 
-export const decode = (buffer: ArrayBuffer, encoding: string = 'cp1252') => {
+export const decodeText = (buffer: ArrayBuffer, encoding: string = 'cp1252') => {
   const decoder = new TextDecoder(encoding, { fatal: true, });
 
   try {
-    return decoder.decode(buffer)
+    return decoder.decode(buffer);
   } catch(error) {
-    console.log('Error while decoding strings. Try another encoding property.')
+    throw new Error('Error while decoding strings. Try another encoding property.');
   }
 }
