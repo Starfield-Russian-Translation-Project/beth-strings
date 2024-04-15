@@ -1,0 +1,14 @@
+{
+  "name": "beth-strings",
+  "version": "0.1.0",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "license": "MIT",
+  "private": false,
+  "type": "module"
+}
