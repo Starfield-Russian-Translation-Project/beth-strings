@@ -13,6 +13,36 @@ beforeAll(async () => {
   arrayBufferStrings = await stringsFile.arrayBuffer();
 });
 
+describe('Testing decoding *.strings files', () => {
+  test('Should decode *.strings file without errors', () => {
+    expect(() => decode(arrayBufferStrings, 'string')).not.toThrow();
+  });
+
+  test('Elements count should be equal to count in *.strings file header' , () => {
+    const view = new DataView(arrayBufferStrings)
+    const decodedStrings = decode(arrayBufferStrings, 'string');
+    const {stringsCount: countFromHeader} = parseHeader(view);
+
+    expect(decodedStrings.length).toEqual(countFromHeader);
+  });
+
+  test('Decoded *.strings files shouldn\'t contain c-null', () => {
+    const decodedStrings = decode(arrayBufferStrings, 'string');
+    const encoder = new TextEncoder();
+    let isNullFound = false;
+
+    decodedStrings.forEach(({text}) => {
+      const buffer = encoder.encode(text);
+      
+      if (~buffer.indexOf(0)) {
+        isNullFound = true;
+      }
+    });
+
+    expect(isNullFound).toBe(false);
+  });
+});
+
 describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
   test('Should decode *.dlstrings/*.ilstrings file without errors', () => {
     expect(() => decode(arrayBufferDlStrings, 'dlstring')).not.toThrow();
