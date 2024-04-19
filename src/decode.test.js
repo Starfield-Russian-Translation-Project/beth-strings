@@ -49,7 +49,7 @@ describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
   });
 
   test('Elements count should be equal to count in *.dlstrings/*.ilstrings file header' , () => {
-    const view = new DataView(arrayBufferDlStrings)
+    const view = new DataView(arrayBufferDlStrings);
     const decodedStrings = decode(arrayBufferDlStrings, 'dlstring');
     const {stringsCount: countFromHeader} = parseHeader(view);
 
@@ -74,6 +74,18 @@ describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
 });
 
 describe('Testing common cases with decoding', () => {
+  test('Should parse headers in *.dlstrings/*.ilstrings without errors', () => {
+    const view = new DataView(arrayBufferDlStrings);
+
+    expect(() => parseHeader(view)).not.toThrow();
+  });
+
+  test('Should parse headers in *.strings without errors', () => {
+    const view = new DataView(arrayBufferStrings);
+
+    expect(() => parseHeader(view)).not.toThrow();
+  });
+
   test('Should throw an error when give wrong string type', () => {
     expect(() => decode((new ArrayBuffer(10)), 'wrong-type')).toThrowError();
   })
