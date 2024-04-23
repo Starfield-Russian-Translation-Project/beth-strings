@@ -1,15 +1,46 @@
-import { test, describe } from "bun:test";
+import { test, describe, beforeAll, expect } from "bun:test";
+import { decode } from './decode';
+import { encodeHeader } from './encode';
+import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from "./const";
+
+let dlStrings;
+let strings;
+let dlStringsBuffer;
+let stringsBuffer;
+
+beforeAll(async () => {
+  const dlStringsFile = Bun.file('.mock/starfield_en.dlstrings');
+  const stringsFile = Bun.file('.mock/starfield_en.strings');
+
+  dlStringsBuffer = await dlStringsFile.arrayBuffer();
+  stringsBuffer = await stringsFile.arrayBuffer();
+
+  dlStrings = decode(dlStringsBuffer, 'dlstring');
+  strings = decode(stringsBuffer, 'string');
+});
 
 describe('Testing encoding *.dlstrings/*.ilstrings files', () => {
   test.todo('Should encode without errors');
-  test.todo('Should correctly encode headers');
+  test('Should correctly encode header', () => {
+    const headerLength = dlStrings.length * ELEMENT_ATTRS_COUNT * UINT32_BYTE_COUNT + HEADER_ATTRS_COUNT * UINT32_BYTE_COUNT;
+    const headerBuffer = dlStringsBuffer.slice(0, headerLength);
+    const stringsLength = 937512;
+
+    expect(encodeHeader(dlStrings, stringsLength)).toEqual(headerBuffer);
+  });
   test.todo('Elements count should be equal to source elements count');
   test.todo('Hash of decoded result should be equal to hash of source file');
 });
   
 describe('Testing encoding *.strings files', () => {
   test.todo('Should encode without errors');
-  test.todo('Should correctly encode headers');
+  test('Should correctly encode header', () => {
+    const headerLength = strings.length * ELEMENT_ATTRS_COUNT * UINT32_BYTE_COUNT + HEADER_ATTRS_COUNT * UINT32_BYTE_COUNT;
+    const headerBuffer = stringsBuffer.slice(0, headerLength);
+    const stringsLength = 1145601;
+
+    expect(encodeHeader(strings, stringsLength)).toEqual(headerBuffer);
+  });
   test.todo('Elements count should be equal to source elements count');
   test.todo('Hash of decoded result should be equal to hash of source file');
 });
