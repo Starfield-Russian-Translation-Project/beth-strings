@@ -21,3 +21,12 @@ export const decodeText = (buffer: ArrayBuffer, encoding: string = 'cp1252') => 
     throw new Error('Error while decoding strings. Try another encoding property.');
   }
 }
+
+export const convertNumToInt32Buffer = (num: number): ArrayBuffer => {
+  const buffer = new ArrayBuffer(4);
+  const view = new DataView(buffer);
+
+  view.setUint32(0, num, true);
+
+  return view.buffer;
+}
