@@ -2,32 +2,32 @@ import { expect, test, describe, beforeAll } from "bun:test";
 import { decode } from "./decode";
 import { parseHeader } from "./util";
 
-let arrayBufferDlStrings;
-let arrayBufferStrings;
+let dlStringsBuffer;
+let stringsBuffer;
 
 beforeAll(async () => {
   const dlStringsFile = Bun.file('.mock/starfield_en.dlstrings');
   const stringsFile = Bun.file('.mock/starfield_en.strings');
 
-  arrayBufferDlStrings = await dlStringsFile.arrayBuffer();
-  arrayBufferStrings = await stringsFile.arrayBuffer();
+  dlStringsBuffer = await dlStringsFile.arrayBuffer();
+  stringsBuffer = await stringsFile.arrayBuffer();
 });
 
 describe('Testing decoding *.strings files', () => {
   test('Should decode *.strings file without errors', () => {
-    expect(() => decode(arrayBufferStrings, 'string')).not.toThrow();
+    expect(() => decode(stringsBuffer, 'string')).not.toThrow();
   });
 
   test('Elements count should be equal to count in *.strings file header' , () => {
-    const view = new DataView(arrayBufferStrings)
-    const decodedStrings = decode(arrayBufferStrings, 'string');
+    const view = new DataView(stringsBuffer)
+    const decodedStrings = decode(stringsBuffer, 'string');
     const {stringsCount: countFromHeader} = parseHeader(view);
 
     expect(decodedStrings.length).toEqual(countFromHeader);
   });
 
   test('Decoded *.strings files shouldn\'t contain c-null', () => {
-    const decodedStrings = decode(arrayBufferStrings, 'string');
+    const decodedStrings = decode(stringsBuffer, 'string');
     const encoder = new TextEncoder();
     let isNullFound = false;
 
@@ -45,19 +45,19 @@ describe('Testing decoding *.strings files', () => {
 
 describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
   test('Should decode *.dlstrings/*.ilstrings file without errors', () => {
-    expect(() => decode(arrayBufferDlStrings, 'dlstring')).not.toThrow();
+    expect(() => decode(dlStringsBuffer, 'dlstring')).not.toThrow();
   });
 
   test('Elements count should be equal to count in *.dlstrings/*.ilstrings file header' , () => {
-    const view = new DataView(arrayBufferDlStrings);
-    const decodedStrings = decode(arrayBufferDlStrings, 'dlstring');
+    const view = new DataView(dlStringsBuffer);
+    const decodedStrings = decode(dlStringsBuffer, 'dlstring');
     const {stringsCount: countFromHeader} = parseHeader(view);
 
     expect(decodedStrings.length).toEqual(countFromHeader);
   });
 
   test('Decoded *.dlstrings/*.ilstrings files shouldn\'t contain c-null', () => {
-    const decodedStrings = decode(arrayBufferDlStrings, 'dlstring');
+    const decodedStrings = decode(dlStringsBuffer, 'dlstring');
     const encoder = new TextEncoder();
     let isNullFound = false;
 
@@ -75,13 +75,13 @@ describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
 
 describe('Testing common cases with decoding', () => {
   test('Should parse headers in *.dlstrings/*.ilstrings without errors', () => {
-    const view = new DataView(arrayBufferDlStrings);
+    const view = new DataView(dlStringsBuffer);
 
     expect(() => parseHeader(view)).not.toThrow();
   });
 
   test('Should parse headers in *.strings without errors', () => {
-    const view = new DataView(arrayBufferStrings);
+    const view = new DataView(stringsBuffer);
 
     expect(() => parseHeader(view)).not.toThrow();
   });

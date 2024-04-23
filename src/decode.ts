@@ -4,9 +4,7 @@ import { decodeText, parseHeader } from './util';
 
 export const decode = (
   buffer: ArrayBuffer, 
-  type: 'dlstring' | 'ilstring' | 'string', 
-  lang?: string, 
-  encoding?: string
+  type: 'dlstring' | 'ilstring' | 'string'
 ): StringEntity[] => {
   if (type !== 'dlstring' && type !== 'ilstring' && type !== 'string') {
     throw Error('Incorrect type. Correct types: "dlstring", "ilstring", "string"');
