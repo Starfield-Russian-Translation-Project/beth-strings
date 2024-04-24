@@ -28,5 +28,19 @@ export const concatBuffers = (firstBuffer: ArrayBuffer, secondBuffer: ArrayBuffe
   resultArray.set(new Uint8Array(firstBuffer), 0);
   resultArray.set(new Uint8Array(secondBuffer), firstBuffer.byteLength);
 
-  return resultArray.buffer as ArrayBuffer;
+  return <ArrayBuffer>resultArray.buffer;
+}
+
+export class NumberEncoder {
+  #view: DataView;
+
+  constructor() {
+    this.#view = new DataView(new ArrayBuffer(4));
+  }
+
+  convertToPseudoUint32(value: number, littleEndian?: boolean): number[] {
+    this.#view.setUint32(0, value, littleEndian);
+
+    return [this.#view.getUint8(0), this.#view.getUint8(1), this.#view.getUint8(2), this.#view.getUint8(3)];
+  }
 }
