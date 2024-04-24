@@ -4,7 +4,7 @@ import { concatArrayBuffers } from "bun";
 
 const MOCK_HEADER = new Int8Array([191, 31, 0, 0, 40, 78, 14, 0, 23, 14, 0, 0, 0, 0, 0, 0, 24, 14, 0, 0, 77, 0, 0, 0]);
 
-describe('Testing utils', () => {
+describe('Utils', () => {
   test('Should correctly parse count, length and offset from header', () => {
     const view = new DataView(MOCK_HEADER.buffer);
 

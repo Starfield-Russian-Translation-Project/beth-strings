@@ -19,7 +19,7 @@ beforeAll(async () => {
   strings = decode(stringsBuffer, 'string');
 });
 
-describe('Testing encoding *.dlstrings/*.ilstrings files', () => {
+describe('Encoding *.dlstrings/*.ilstrings', () => {
   test.todo('Should encode without errors');
   test('Should correctly encode header', () => {
     const headerLength = dlStrings.length * ELEMENT_ATTRS_COUNT * UINT32_BYTE_COUNT + HEADER_ATTRS_COUNT * UINT32_BYTE_COUNT;
@@ -32,7 +32,7 @@ describe('Testing encoding *.dlstrings/*.ilstrings files', () => {
   test.todo('Hash of decoded result should be equal to hash of source file');
 });
   
-describe('Testing encoding *.strings files', () => {
+describe('Encoding *.strings', () => {
   test.todo('Should encode without errors');
   test('Should correctly encode header', () => {
     const headerLength = strings.length * ELEMENT_ATTRS_COUNT * UINT32_BYTE_COUNT + HEADER_ATTRS_COUNT * UINT32_BYTE_COUNT;

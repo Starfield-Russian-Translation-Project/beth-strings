@@ -13,7 +13,7 @@ beforeAll(async () => {
   stringsBuffer = await stringsFile.arrayBuffer();
 });
 
-describe('Testing decoding *.strings files', () => {
+describe('Decoding *.strings', () => {
   test('Should decode *.strings file without errors', () => {
     expect(() => decode(stringsBuffer, 'string')).not.toThrow();
   });
@@ -26,7 +26,7 @@ describe('Testing decoding *.strings files', () => {
     expect(decodedStrings.length).toEqual(countFromHeader);
   });
 
-  test('Decoded *.strings files shouldn\'t contain c-null', () => {
+  test('Decoded *.strings shouldn\'t contain c-null', () => {
     const decodedStrings = decode(stringsBuffer, 'string');
     const encoder = new TextEncoder();
     let isNullFound = false;
@@ -43,7 +43,7 @@ describe('Testing decoding *.strings files', () => {
   });
 });
 
-describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
+describe('Decoding *.dlstrings/*.ilstrings', () => {
   test('Should decode *.dlstrings/*.ilstrings file without errors', () => {
     expect(() => decode(dlStringsBuffer, 'dlstring')).not.toThrow();
   });
@@ -56,7 +56,7 @@ describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
     expect(decodedStrings.length).toEqual(countFromHeader);
   });
 
-  test('Decoded *.dlstrings/*.ilstrings files shouldn\'t contain c-null', () => {
+  test('Decoded *.dlstrings/*.ilstrings shouldn\'t contain c-null', () => {
     const decodedStrings = decode(dlStringsBuffer, 'dlstring');
     const encoder = new TextEncoder();
     let isNullFound = false;
@@ -73,7 +73,7 @@ describe('Testing decoding *.dlstrings/*.ilstrings files', () => {
   });
 });
 
-describe('Testing common cases with decoding', () => {
+describe('Common cases with decoding', () => {
   test('Should parse headers in *.dlstrings/*.ilstrings without errors', () => {
     const view = new DataView(dlStringsBuffer);
 
