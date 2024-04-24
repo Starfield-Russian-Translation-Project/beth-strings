@@ -1,5 +1,6 @@
 import { expect, test, describe } from "bun:test";
-import { decodeText, parseHeader } from "./util";
+import { decodeText, parseHeader, concatBuffers } from "./util";
+import { concatArrayBuffers } from "bun";
 
 const MOCK_HEADER = new Int8Array([191, 31, 0, 0, 40, 78, 14, 0, 23, 14, 0, 0, 0, 0, 0, 0, 24, 14, 0, 0, 77, 0, 0, 0]);
 
@@ -15,5 +16,12 @@ describe('Testing utils', () => {
     const buffer = array.buffer;
 
     expect(() => decodeText(buffer, 'utf-8')).toThrowError();
+  });
+
+  test('Should correctly concat two ArrayBuffers', () => {
+    const test1 = MOCK_HEADER.slice(0, 4);
+    const test2 = MOCK_HEADER.slice(4, MOCK_HEADER.length);;
+
+    expect(concatBuffers(test1, test2)).toEqual(concatArrayBuffers([test1,test2]));
   });
 });

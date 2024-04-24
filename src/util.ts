@@ -21,3 +21,12 @@ export const decodeText = (buffer: ArrayBuffer, encoding: string = 'cp1252') => 
     throw new Error('Error while decoding strings. Try another encoding property.');
   }
 }
+
+export const concatBuffers = (firstBuffer: ArrayBuffer, secondBuffer: ArrayBuffer): ArrayBuffer => {
+  const resultArray = new Uint8Array(firstBuffer.byteLength + secondBuffer.byteLength);
+
+  resultArray.set(new Uint8Array(firstBuffer), 0);
+  resultArray.set(new Uint8Array(secondBuffer), firstBuffer.byteLength);
+
+  return resultArray.buffer as ArrayBuffer;
+}
