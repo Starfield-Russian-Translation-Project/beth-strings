@@ -6,3 +6,5 @@ export interface Directory {
   id: string;
   position: number;
 }
+
+export type StringType = 'dlstring' | 'ilstring' | 'string';

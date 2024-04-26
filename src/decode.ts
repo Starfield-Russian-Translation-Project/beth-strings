@@ -1,10 +1,10 @@
-import type { StringEntity } from './types';
+import type { StringEntity, StringType } from './types';
 import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from './const';
 import { decodeText, parseHeader } from './util';
 
 export const decode = (
   buffer: ArrayBuffer, 
-  type: 'dlstring' | 'ilstring' | 'string'
+  type: StringType
 ): StringEntity[] => {
   if (type !== 'dlstring' && type !== 'ilstring' && type !== 'string') {
     throw Error('Incorrect type. Correct types: "dlstring", "ilstring", "string"');
