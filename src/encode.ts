@@ -32,15 +32,13 @@ export const encodeDlStrings = (strings: StringEntity[]): {pseudoBuffer: number[
   const pseudoBuffer: number[] = [];
   const directories: Directory[] = [];
 
-  strings.forEach(({id, text}, index) => {
+  strings.forEach(({id, text}) => {
     if (!text) {
       text = '';
     }
 
-    const duplicate = positionsMap.get(text);
-
-    if (duplicate) {
-      directories.push({id, position: duplicate});
+    if (positionsMap.has(text)) {
+      directories.push({id, position: <number>positionsMap.get(text)});
       return;
     }
 
