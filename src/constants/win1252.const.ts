@@ -1,0 +1,1 @@
+export const WIN_1252 = new Map([]);

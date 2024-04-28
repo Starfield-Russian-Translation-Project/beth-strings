@@ -1,5 +1,5 @@
 import type { StringEntity, StringType } from './types';
-import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from './const';
+import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from './constants';
 import { decodeText, parseHeader } from './util';
 
 export const decode = (

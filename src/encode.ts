@@ -1,4 +1,4 @@
-import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from "./const";
+import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from "./constants";
 import type { Directory, StringEntity } from "./types";
 import { NumberEncoder } from "./util";
 

@@ -1,7 +1,7 @@
 import { test, describe, beforeAll, expect } from "bun:test";
 import { decode } from './decode';
 import { encodeDlStrings, encodeHeader } from './encode';
-import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from "./const";
+import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from "./constants";
 
 let dlStrings;
 let strings;

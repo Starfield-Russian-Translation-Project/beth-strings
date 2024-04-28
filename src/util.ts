@@ -1,4 +1,4 @@
-import { UINT32_BYTE_COUNT } from "./const";
+import { UINT32_BYTE_COUNT } from "./constants";
 
 export const parseHeader = (dataView: DataView) => {
   const stringsCount = dataView.getUint32(0, true);
