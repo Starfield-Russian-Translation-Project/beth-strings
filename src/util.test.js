@@ -1,8 +1,23 @@
 import { expect, test, describe } from "bun:test";
-import { decodeText, parseHeader, concatBuffers, NumberEncoder } from "./util";
+import { decodeText, parseHeader, concatBuffers, NumberEncoder, TextEncoder } from "./util";
 import { concatArrayBuffers } from "bun";
 
+const generateByteSequence = (start, end) => {
+  const length = end - start + 1;
+  const array = new Uint8Array(end - start + 1);
+
+  for (let index = 0; index <= length; index++) 
+    array[index] = index + start;
+
+  return array;
+}
+
 const MOCK_HEADER = new Int8Array([191, 31, 0, 0, 40, 78, 14, 0, 23, 14, 0, 0, 0, 0, 0, 0, 24, 14, 0, 0, 77, 0, 0, 0]);
+const ASCII_BYTE = generateByteSequence(0, 127);
+const MOCK_WIN1251 = 'ЂЃ‚ѓ„…†‡€‰Љ‹ЊЌЋЏђ‘’“”•–—™љ›њќћџ ЎўЈ¤Ґ¦§Ё©Є«¬­®Ї°±Ііґµ¶·ё№є»јЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя';
+const MOCK_WIN1252 = '\0\x01\x02\x03\x04\x05\x06\x07\b\t\n\x0B\f\r\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7F';
+const WIN1251_CHARS_SECOND_BYTE = generateByteSequence(128, 255);
+const WIN1252_CHARS_SECOND_BYTE = '€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâã';
 
 describe('Utils', () => {
   test('Should correctly parse count, length and offset from header', () => {
@@ -30,5 +45,17 @@ describe('Utils', () => {
 
     expect(numEncoder.convertToPseudoUint32(8127, true)).toEqual([191, 31, 0, 0]);
     expect(numEncoder.convertToPseudoUint32(937512, true)).toEqual([40, 78, 14, 0]);
-  })
+  });
+
+  test('Should correctly encode text in Windows1252 encoding', () => {
+    const encoder = new TextEncoder('windows1252');
+
+    expect(encoder.encode(MOCK_WIN1252, true).buffer).toEqual(ASCII_BYTE.buffer);
+  });
+
+  test('Should correctly encode text in Windows1251 encoding', () => {
+    const encoder = new TextEncoder('windows1251');
+
+    expect(encoder.encode(MOCK_WIN1251, true).buffer).toEqual(WIN1251_CHARS_SECOND_BYTE.buffer);
+  });
 });

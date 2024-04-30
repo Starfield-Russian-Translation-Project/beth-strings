@@ -1,6 +1,6 @@
 import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from "./constants";
-import type { Directory, StringEntity } from "./types";
-import { NumberEncoder } from "./util";
+import type { Directory, StringEntity, Encoding } from "./types";
+import { NumberEncoder, TextEncoder } from "./util";
 
 export const encodeHeader = (directories: Directory[], rawStringsLength: number): ArrayBuffer => {
   const bytesCount = UINT32_BYTE_COUNT * ELEMENT_ATTRS_COUNT * directories.length + HEADER_ATTRS_COUNT * UINT32_BYTE_COUNT;
@@ -10,27 +10,29 @@ export const encodeHeader = (directories: Directory[], rawStringsLength: number)
   directoryView.setUint32(0 * UINT32_BYTE_COUNT, directories.length, true);
   directoryView.setUint32(1 * UINT32_BYTE_COUNT, rawStringsLength, true);
 
-  for (let index = 0; index < directories.length; index++) {
+  directories.forEach(({id, position}, index) => {
     const idOffset = (index * ELEMENT_ATTRS_COUNT + HEADER_ATTRS_COUNT) * UINT32_BYTE_COUNT;
     const positionOffset = (index * ELEMENT_ATTRS_COUNT + HEADER_ATTRS_COUNT + 1) * UINT32_BYTE_COUNT;
 
     try {
-      directoryView.setUint32(idOffset, parseInt(directories[index]?.id, 16), true);
-      directoryView.setUint32(positionOffset, directories[index]?.position, true);
+      directoryView.setUint32(idOffset, parseInt(id, 16), true);
+      directoryView.setUint32(positionOffset, position, true);
     } catch {
       throw new Error('An error while encoding id and position of string.');
     }
-  }
+  });
 
   return directoryView.buffer;
 }
 
-export const encodeDlStrings = (strings: StringEntity[]): {pseudoBuffer: number[], directories: Directory[]} => {
+export const encodeDlStrings = (strings: StringEntity[], encoding: Encoding): {pseudoBuffer: number[], directories: Directory[]} => {
   const numEncoder = new NumberEncoder();
-  const textEncoder = new TextEncoder();
+  const textEncoder = new TextEncoder(encoding);
   const positionsMap = new Map<string, number>();
   const pseudoBuffer: number[] = [];
   const directories: Directory[] = [];
+  const nil = 0;
+  const nilLength = 1;
 
   strings.forEach(({id, text}) => {
     if (!text) {
@@ -45,14 +47,12 @@ export const encodeDlStrings = (strings: StringEntity[]): {pseudoBuffer: number[
     positionsMap.set(text, pseudoBuffer.length);
     directories.push({id, position: pseudoBuffer.length});
 
-    // +1 for null at the end of the string
-    const encodedLength = numEncoder.convertToPseudoUint32(text.length + 1, true);
+    const encodedLength = numEncoder.convertToPseudoUint32(text.length + nilLength, true);
     const encodedText = textEncoder.encode(text);
 
     pseudoBuffer.push(...encodedLength);
     pseudoBuffer.push(...encodedText);
-    // adding null
-    pseudoBuffer.push(0);
+    pseudoBuffer.push(nil);
   });
 
   return {pseudoBuffer, directories};

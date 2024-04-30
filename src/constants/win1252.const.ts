@@ -258,4 +258,9 @@ const byPointer = new Map([
   [0x00FD, 125],
   [0x00FE, 126],
   [0x00FF, 127],
-])
+]);
+
+export const WIN_1252 = {
+  byCodePoint,
+  byPointer,
+}

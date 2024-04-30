@@ -8,3 +8,4 @@ export interface Directory {
 }
 
 export type StringType = 'dlstring' | 'ilstring' | 'string';
+export type Encoding = 'windows1251' | 'windows1252';
