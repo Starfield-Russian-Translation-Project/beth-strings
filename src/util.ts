@@ -1,4 +1,4 @@
-import { UINT32_BYTE_COUNT, WIN_1251, WIN_1252, ASCII_LENGTH } from "./constants";
+import { UINT32_BYTE_COUNT, WIN_1251, WIN_1252 } from "./constants";
 import type { Encoding } from "./types";
 
 export const parseHeader = (dataView: DataView) => {
