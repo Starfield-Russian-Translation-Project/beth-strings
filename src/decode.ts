@@ -1,23 +1,24 @@
-import type { StringEntity, StringType } from './types';
-import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT } from './constants';
+import type { Encoding, Language, StringEntity, StringType } from './types';
+import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT, LANGUAGE_ENCODING_MAP } from './constants';
 import { decodeText, parseHeader } from './util';
 
 export const decode = (
-  buffer: ArrayBuffer, 
-  type: StringType
+  buffer: ArrayBuffer,
+  type: StringType,
+  lang: Language,
 ): StringEntity[] => {
   if (type !== 'dlstring' && type !== 'ilstring' && type !== 'string') {
     throw Error('Incorrect type. Correct types: "dlstring", "ilstring", "string"');
   }
 
   if (type === 'string') {
-    return decodeStrings(buffer);
+    return decodeStrings(buffer, LANGUAGE_ENCODING_MAP[lang]);
   }
 
-  return decodeDlStrings(buffer);
+  return decodeDlStrings(buffer, LANGUAGE_ENCODING_MAP[lang]);
 }
 
-const decodeStrings = (buffer: ArrayBuffer): StringEntity[] => {
+const decodeStrings = (buffer: ArrayBuffer, encoding: Encoding): StringEntity[] => {
   const dataView = new DataView(buffer);
   const result: StringEntity[] = [];
 
@@ -38,7 +39,7 @@ const decodeStrings = (buffer: ArrayBuffer): StringEntity[] => {
     }
 
     const textBuffer = stringsBuffer.slice(elementOffset, nullPosition);
-    const text = decodeText(textBuffer);
+    const text = decodeText(textBuffer, encoding);
 
     result.push({ id: elementId, position: elementOffset, text });
   }
@@ -46,7 +47,7 @@ const decodeStrings = (buffer: ArrayBuffer): StringEntity[] => {
   return result;
 }
 
-const decodeDlStrings = (buffer: ArrayBuffer): StringEntity[] => {
+const decodeDlStrings = (buffer: ArrayBuffer, encoding: Encoding): StringEntity[] => {
   const dataView = new DataView(buffer);
   const result: StringEntity[] = [];
 
@@ -66,7 +67,7 @@ const decodeDlStrings = (buffer: ArrayBuffer): StringEntity[] => {
     const textStartPosition = elementOffset + UINT32_BYTE_COUNT;
     const textEndPosition = textStartPosition + textLength - nullByte;
     const textBuffer = stringsBuffer.slice(textStartPosition, textEndPosition);
-    const text = decodeText(textBuffer);
+    const text = decodeText(textBuffer, encoding);
 
     result.push({ id: elementId, position: elementOffset, text });
   }

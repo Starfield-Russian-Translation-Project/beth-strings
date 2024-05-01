@@ -15,8 +15,8 @@ beforeAll(async () => {
   dlStringsBuffer = await dlStringsFile.arrayBuffer();
   stringsBuffer = await stringsFile.arrayBuffer();
 
-  dlStrings = decode(dlStringsBuffer, 'dlstring');
-  strings = decode(stringsBuffer, 'string');
+  dlStrings = decode(dlStringsBuffer, 'dlstring', 'en');
+  strings = decode(stringsBuffer, 'string', 'en');
 });
 
 describe('Encoding *.dlstrings/*.ilstrings', () => {
@@ -31,7 +31,7 @@ describe('Encoding *.dlstrings/*.ilstrings', () => {
   });
 
   test('Should correctly create directories from raw string data', () => {
-    const {directories} = encodeDlStrings(dlStrings, 'windows1252');
+    const {directories} = encodeDlStrings(dlStrings, 'windows-1252');
 
     expect(directories).toEqual(dlStrings.map(({id, position}) => ({id, position})));
   });
@@ -39,7 +39,7 @@ describe('Encoding *.dlstrings/*.ilstrings', () => {
   test('Should correctly convert raw string data into pseudo ArrayBuffer', () => {
     const headerLength = dlStrings.length * ELEMENT_ATTRS_COUNT * UINT32_BYTE_COUNT + HEADER_ATTRS_COUNT * UINT32_BYTE_COUNT;
     const strings = dlStringsBuffer.slice(headerLength, dlStringsBuffer.length);
-    const { pseudoBuffer } = encodeDlStrings(dlStrings, 'windows1252');
+    const { pseudoBuffer } = encodeDlStrings(dlStrings, 'windows-1252');
 
     expect(new Uint8Array(pseudoBuffer).buffer).toEqual(strings);
   });

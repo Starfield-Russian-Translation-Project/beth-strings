@@ -8,4 +8,5 @@ export interface Directory {
 }
 
 export type StringType = 'dlstring' | 'ilstring' | 'string';
-export type Encoding = 'windows1251' | 'windows1252';
+export type Encoding = 'windows-1251' | 'windows-1252';
+export type Language = 'ru' | 'en' | 'fr' | 'gr' | 'it' | 'sp'

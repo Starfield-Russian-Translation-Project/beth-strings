@@ -13,7 +13,7 @@ export const parseHeader = (dataView: DataView) => {
   };
 }
 
-export const decodeText = (buffer: ArrayBuffer, encoding: string = 'cp1252') => {
+export const decodeText = (buffer: ArrayBuffer, encoding: Encoding) => {
   const decoder = new TextDecoder(encoding, { fatal: true, });
 
   try {
@@ -55,10 +55,10 @@ export class TextEncoder {
 
   encode(string: string, fatal?: boolean): Uint8Array {
     switch(this.#encoding) {
-      case 'windows1252':
+      case 'windows-1252':
         return this.#encodeWithCharMap(string, WIN_1252.byPointer, fatal);
 
-      case 'windows1251':  
+      case 'windows-1251':  
         return this.#encodeWithCharMap(string, WIN_1251.byPointer, fatal);
 
       default:
