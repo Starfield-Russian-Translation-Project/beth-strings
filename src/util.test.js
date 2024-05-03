@@ -1,6 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { decodeText, parseHeader, concatBuffers, NumberEncoder, TextEncoder } from "./util";
-import { concatArrayBuffers } from "bun";
+import { decodeText, parseHeader, NumberEncoder, TextEncoder } from "./util";
 
 const generateByteSequence = (start, end) => {
   const length = end - start + 1;
@@ -30,13 +29,6 @@ describe('Utils', () => {
     const buffer = array.buffer;
 
     expect(() => decodeText(buffer, 'utf-8')).toThrowError();
-  });
-
-  test('Should correctly concat two ArrayBuffers', () => {
-    const test1 = MOCK_HEADER.slice(0, 4);
-    const test2 = MOCK_HEADER.slice(4, MOCK_HEADER.length);;
-
-    expect(concatBuffers(test1, test2)).toEqual(concatArrayBuffers([test1,test2]));
   });
 
   test('Should correctly convert number to pseudo Uint32Array', () => {

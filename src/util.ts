@@ -23,15 +23,6 @@ export const decodeText = (buffer: ArrayBuffer, encoding: Encoding) => {
   }
 }
 
-export const concatBuffers = (firstBuffer: ArrayBuffer, secondBuffer: ArrayBuffer): ArrayBuffer => {
-  const resultArray = new Uint8Array(firstBuffer.byteLength + secondBuffer.byteLength);
-
-  resultArray.set(new Uint8Array(firstBuffer), 0);
-  resultArray.set(new Uint8Array(secondBuffer), firstBuffer.byteLength);
-
-  return <ArrayBuffer>resultArray.buffer;
-}
-
 export class NumberEncoder {
   #view: DataView;
 
