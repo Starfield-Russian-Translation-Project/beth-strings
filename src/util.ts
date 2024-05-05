@@ -82,3 +82,47 @@ export class TextEncoder {
     return result;
   }
 }
+
+export class OwnTextDecoder {
+  #encoding: Encoding;
+
+  constructor(encoding: Encoding) {
+    this.#encoding = encoding;
+  }
+
+  decode(array: Uint8Array, fatal?: boolean): string {
+    switch(this.#encoding) {
+      case 'windows-1252':
+        return this.#decodeWithCharMap(array, WIN_1252.byCodePoint, fatal);
+
+      case 'windows-1251':  
+        return this.#decodeWithCharMap(array, WIN_1251.byCodePoint, fatal);
+
+      default:
+        throw new Error('Can\'t decode Uint8Array without setting encoding.')  
+    }
+  }
+
+  #decodeWithCharMap(array: Uint8Array, charMap: Map<number, number>, fatal?: boolean): string {
+    const buffer: string[] = [];
+
+    array.forEach((codePoint, index) => {
+      if (0x00 <= codePoint && codePoint <= 0x7F) {
+        buffer.push(String.fromCharCode(codePoint));
+        return;
+      }
+
+      if (charMap.has(codePoint - 0x80)) {
+        buffer.push(String.fromCharCode(<number>charMap.get(codePoint - 0x80)));
+      } else {
+        if (fatal) {
+          throw new Error(`Unknown symbol at ${index} position.`);
+        }
+
+        buffer.push(String.fromCharCode(0xFFFD));
+      }
+    });
+
+    return buffer.join('');
+  }
+}

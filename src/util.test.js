@@ -1,5 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { decodeText, parseHeader, NumberEncoder, TextEncoder } from "./util";
+import { decodeText, parseHeader, NumberEncoder, TextEncoder, OwnTextDecoder } from "./util";
 
 const generateByteSequence = (start, end) => {
   const length = end - start + 1;
@@ -48,5 +48,17 @@ describe('Utils', () => {
     const encoder = new TextEncoder('windows-1251');
 
     expect(encoder.encode(ASCII_CHAR_SEQUENCE + WIN1251_CHAR_SEQUENCE, true).buffer).toEqual(TWO_BYTE_CHAR_SEQUENCE_BUFFER.buffer);
+  });
+
+  test('Should correctly decode text to Windows1252 encoding', () => {
+    const encoder = new OwnTextDecoder('windows-1252');
+
+    expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, false)).toEqual(ASCII_CHAR_SEQUENCE + WIN1252_CHAR_SEQUENCE);
+  });
+
+  test('Should correctly decode text to Windows1251 encoding', () => {
+    const encoder = new OwnTextDecoder('windows-1251');
+
+    expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, false)).toEqual(ASCII_CHAR_SEQUENCE + WIN1251_CHAR_SEQUENCE);
   });
 });
