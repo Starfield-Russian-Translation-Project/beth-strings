@@ -24,13 +24,6 @@ describe('Utils', () => {
     expect(parseHeader(view)).toEqual({stringsCount: 8127, textLength: 937512, textStartOffset: -937488});
   });
 
-  test('Should throw an error when decoding text with wrong encoding', () => {
-    const decoder = new TextDecoder('utf-8')
-    const array = new Uint8Array([232, 232, 232]);
-
-    expect(() => decoder.decode(array)).toThrowError();
-  });
-
   test('Should correctly convert number to pseudo Uint32Array', () => {
     const numEncoder = new NumberEncoder();
 
@@ -38,27 +31,38 @@ describe('Utils', () => {
     expect(numEncoder.convertToPseudoUint32(937512, true)).toEqual([40, 78, 14, 0]);
   });
 
-  test('Should correctly encode text in Windows1252 encoding', () => {
-    const encoder = new TextEncoder('windows-1252');
-
-    expect(encoder.encode(ASCII_CHAR_SEQUENCE + WIN1252_CHAR_SEQUENCE, true).buffer).toEqual(TWO_BYTE_CHAR_SEQUENCE_BUFFER.buffer);
+  describe('TextEncoder', () => {
+    test('Should correctly encode text in Windows1252 encoding', () => {
+      const encoder = new TextEncoder('windows-1252');
+  
+      expect(encoder.encode(ASCII_CHAR_SEQUENCE + WIN1252_CHAR_SEQUENCE, true).buffer).toEqual(TWO_BYTE_CHAR_SEQUENCE_BUFFER.buffer);
+    });
+  
+    test('Should correctly encode text in Windows1251 encoding', () => {
+      const encoder = new TextEncoder('windows-1251');
+  
+      expect(encoder.encode(ASCII_CHAR_SEQUENCE + WIN1251_CHAR_SEQUENCE, true).buffer).toEqual(TWO_BYTE_CHAR_SEQUENCE_BUFFER.buffer);
+    });
   });
 
-  test('Should correctly encode text in Windows1251 encoding', () => {
-    const encoder = new TextEncoder('windows-1251');
+  describe('TextDecoder', () => {
+    test('Should throw an error when decoding text with wrong encoding', () => {
+      const decoder = new TextDecoder('utf-8')
+      const array = new Uint8Array([232, 232, 232]);
+  
+      expect(() => decoder.decode(array)).toThrowError();
+    });
 
-    expect(encoder.encode(ASCII_CHAR_SEQUENCE + WIN1251_CHAR_SEQUENCE, true).buffer).toEqual(TWO_BYTE_CHAR_SEQUENCE_BUFFER.buffer);
-  });
-
-  test('Should correctly decode text to Windows1252 encoding', () => {
-    const encoder = new TextDecoder('windows-1252');
-
-    expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, false)).toEqual(ASCII_CHAR_SEQUENCE + WIN1252_CHAR_SEQUENCE);
-  });
-
-  test('Should correctly decode text to Windows1251 encoding', () => {
-    const encoder = new TextDecoder('windows-1251');
-
-    expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, false)).toEqual(ASCII_CHAR_SEQUENCE + WIN1251_CHAR_SEQUENCE);
+    test('Should correctly decode text to Windows1252 encoding', () => {
+      const encoder = new TextDecoder('windows-1252');
+  
+      expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, true)).toEqual(ASCII_CHAR_SEQUENCE + WIN1252_CHAR_SEQUENCE);
+    });
+  
+    test('Should correctly decode text to Windows1251 encoding', () => {
+      const encoder = new TextDecoder('windows-1251');
+  
+      expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, true)).toEqual(ASCII_CHAR_SEQUENCE + WIN1251_CHAR_SEQUENCE);
+    });
   });
 });
