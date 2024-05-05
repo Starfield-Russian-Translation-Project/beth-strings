@@ -1,6 +1,6 @@
 import type { Encoding, Language, StringEntity, StringType } from './types';
 import { ELEMENT_ATTRS_COUNT, HEADER_ATTRS_COUNT, UINT32_BYTE_COUNT, LANGUAGE_ENCODING_MAP } from './constants';
-import { decodeText, parseHeader } from './util';
+import { parseHeader, TextDecoder } from './util';
 
 export const decode = (
   buffer: ArrayBuffer,
@@ -20,6 +20,7 @@ export const decode = (
 
 const decodeStrings = (buffer: ArrayBuffer, encoding: Encoding): StringEntity[] => {
   const dataView = new DataView(buffer);
+  const decoder = new TextDecoder(encoding);
   const result: StringEntity[] = [];
 
   const { stringsCount, textStartOffset } = parseHeader(dataView);
@@ -39,7 +40,7 @@ const decodeStrings = (buffer: ArrayBuffer, encoding: Encoding): StringEntity[] 
     }
 
     const textBuffer = stringsBuffer.slice(elementOffset, nullPosition);
-    const text = decodeText(textBuffer, encoding);
+    const text = decoder.decode(new Uint8Array(textBuffer));
 
     result.push({ id: elementId, position: elementOffset, text });
   }
@@ -49,6 +50,7 @@ const decodeStrings = (buffer: ArrayBuffer, encoding: Encoding): StringEntity[] 
 
 const decodeDlStrings = (buffer: ArrayBuffer, encoding: Encoding): StringEntity[] => {
   const dataView = new DataView(buffer);
+  const decoder = new TextDecoder(encoding);
   const result: StringEntity[] = [];
 
   const { stringsCount, textStartOffset } = parseHeader(dataView);
@@ -67,7 +69,7 @@ const decodeDlStrings = (buffer: ArrayBuffer, encoding: Encoding): StringEntity[
     const textStartPosition = elementOffset + UINT32_BYTE_COUNT;
     const textEndPosition = textStartPosition + textLength - nullByte;
     const textBuffer = stringsBuffer.slice(textStartPosition, textEndPosition);
-    const text = decodeText(textBuffer, encoding);
+    const text = decoder.decode(new Uint8Array(textBuffer));
 
     result.push({ id: elementId, position: elementOffset, text });
   }

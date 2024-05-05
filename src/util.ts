@@ -13,16 +13,6 @@ export const parseHeader = (dataView: DataView) => {
   };
 }
 
-export const decodeText = (buffer: ArrayBuffer, encoding: Encoding) => {
-  const decoder = new TextDecoder(encoding, { fatal: true, });
-
-  try {
-    return decoder.decode(buffer);
-  } catch(error) {
-    throw new Error('Error while decoding strings. Try another encoding property.');
-  }
-}
-
 export class NumberEncoder {
   #view: DataView;
 
@@ -83,7 +73,7 @@ export class TextEncoder {
   }
 }
 
-export class OwnTextDecoder {
+export class TextDecoder {
   #encoding: Encoding;
 
   constructor(encoding: Encoding) {
@@ -104,25 +94,26 @@ export class OwnTextDecoder {
   }
 
   #decodeWithCharMap(array: Uint8Array, charMap: Map<number, number>, fatal?: boolean): string {
-    const buffer: string[] = [];
+    let result = '';
 
     array.forEach((codePoint, index) => {
       if (0x00 <= codePoint && codePoint <= 0x7F) {
-        buffer.push(String.fromCharCode(codePoint));
+        result += String.fromCharCode(codePoint);
+        
         return;
       }
 
       if (charMap.has(codePoint - 0x80)) {
-        buffer.push(String.fromCharCode(<number>charMap.get(codePoint - 0x80)));
+        result += String.fromCharCode(<number>charMap.get(codePoint - 0x80));
       } else {
         if (fatal) {
           throw new Error(`Unknown symbol at ${index} position.`);
         }
 
-        buffer.push(String.fromCharCode(0xFFFD));
+        result += String.fromCharCode(0xFFFD);
       }
     });
 
-    return buffer.join('');
+    return result;
   }
 }

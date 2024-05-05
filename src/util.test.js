@@ -1,5 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { decodeText, parseHeader, NumberEncoder, TextEncoder, OwnTextDecoder } from "./util";
+import { parseHeader, NumberEncoder, TextEncoder, TextDecoder } from "./util";
 
 const generateByteSequence = (start, end) => {
   const length = end - start + 1;
@@ -25,10 +25,10 @@ describe('Utils', () => {
   });
 
   test('Should throw an error when decoding text with wrong encoding', () => {
+    const decoder = new TextDecoder('utf-8')
     const array = new Uint8Array([232, 232, 232]);
-    const buffer = array.buffer;
 
-    expect(() => decodeText(buffer, 'utf-8')).toThrowError();
+    expect(() => decoder.decode(array)).toThrowError();
   });
 
   test('Should correctly convert number to pseudo Uint32Array', () => {
@@ -51,13 +51,13 @@ describe('Utils', () => {
   });
 
   test('Should correctly decode text to Windows1252 encoding', () => {
-    const encoder = new OwnTextDecoder('windows-1252');
+    const encoder = new TextDecoder('windows-1252');
 
     expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, false)).toEqual(ASCII_CHAR_SEQUENCE + WIN1252_CHAR_SEQUENCE);
   });
 
   test('Should correctly decode text to Windows1251 encoding', () => {
-    const encoder = new OwnTextDecoder('windows-1251');
+    const encoder = new TextDecoder('windows-1251');
 
     expect(encoder.decode(TWO_BYTE_CHAR_SEQUENCE_BUFFER, false)).toEqual(ASCII_CHAR_SEQUENCE + WIN1251_CHAR_SEQUENCE);
   });
