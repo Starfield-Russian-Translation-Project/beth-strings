@@ -46,7 +46,7 @@ describe('Encoding *.dlstrings/*.ilstrings', () => {
 
   test.todo('Elements count should be equal to source elements count');
 
-  test.todo('Hash of decoded result should be equal to hash of source file');
+  test.todo('Hash of encoded result should be equal to hash of source file');
 });
   
 describe('Encoding *.strings', () => {
@@ -62,5 +62,5 @@ describe('Encoding *.strings', () => {
 
   test.todo('Elements count should be equal to source elements count');
 
-  test.todo('Hash of decoded result should be equal to hash of source file');
+  test.todo('Hash of encoded result should be equal to hash of source file');
 });

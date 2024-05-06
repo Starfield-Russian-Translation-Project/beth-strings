@@ -11,7 +11,7 @@ const generateByteSequence = (start, end) => {
   return array;
 }
 
-const MOCK_HEADER = new Int8Array([191, 31, 0, 0, 40, 78, 14, 0, 23, 14, 0, 0, 0, 0, 0, 0, 24, 14, 0, 0, 77, 0, 0, 0]);
+const MOCK_HEADER_ARRAY = new Int8Array([191, 31, 0, 0, 40, 78, 14, 0, 23, 14, 0, 0, 0, 0, 0, 0, 24, 14, 0, 0, 77, 0, 0, 0]);
 const TWO_BYTE_CHAR_SEQUENCE_BUFFER = generateByteSequence(0, 255);
 const ASCII_CHAR_SEQUENCE = '\0\x01\x02\x03\x04\x05\x06\x07\b\t\n\x0B\f\r\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7F';
 const WIN1251_CHAR_SEQUENCE = 'ЂЃ‚ѓ„…†‡€‰Љ‹ЊЌЋЏђ‘’“”•–—™љ›њќћџ ЎўЈ¤Ґ¦§Ё©Є«¬­®Ї°±Ііґµ¶·ё№є»јЅѕїАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя';
@@ -19,7 +19,7 @@ const WIN1252_CHAR_SEQUENCE = '€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’�
 
 describe('Utils', () => {
   test('Should correctly parse count, length and offset from header', () => {
-    const view = new DataView(MOCK_HEADER.buffer);
+    const view = new DataView(MOCK_HEADER_ARRAY.buffer);
 
     expect(parseHeader(view)).toEqual({stringsCount: 8127, textLength: 937512, textStartOffset: -937488});
   });

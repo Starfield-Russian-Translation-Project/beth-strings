@@ -7,6 +7,10 @@ export const decode = (
   type: StringType,
   lang: Language,
 ): StringEntity[] => {
+  if (lang !== 'en' && lang !== 'ru' && lang !== 'fr' && lang !== 'gr' && lang !== 'it' && lang !== 'sp') {
+    throw Error('Incorrect language. Correct arguments are: \'ru\' | \'en\' | \'fr\' | \'gr\' | \'it\' | \'sp\'');
+  }
+
   if (type !== 'dlstring' && type !== 'ilstring' && type !== 'string') {
     throw Error('Incorrect type. Correct types: "dlstring", "ilstring", "string"');
   }
